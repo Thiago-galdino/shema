@@ -1,0 +1,22 @@
+.filters { display: flex; gap: 1rem; margin-bottom: 1.5rem; flex-wrap: wrap; }
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1.25rem; }
+.memberCard { display: flex; flex-direction: column; gap: 0.875rem; }
+.cardTop { display: flex; align-items: center; gap: 0.875rem; }
+.memberInfo { flex: 1; min-width: 0; }
+.memberName { font-size: 0.95rem; font-weight: 700; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.memberMeta { font-size: 0.78rem; color: var(--text-muted); margin-top: 0.1rem; }
+.cardDetails { display: flex; flex-wrap: wrap; gap: 0.4rem 1.25rem; font-size: 0.78rem; color: var(--text-muted); border-top: 1px solid var(--border); padding-top: 0.875rem; }
+.cardActions { display: flex; gap: 0.5rem; border-top: 1px solid var(--border); padding-top: 0.75rem; }
+
+.photoUpload {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  cursor: pointer;
+  transition: var(--transition);
+}
+.photoUpload:hover .avatar {
+  border-color: var(--accent) !important;
+  transform: scale(1.02);
+}
+

@@ -1,0 +1,28 @@
+.kpiCard { display: flex; flex-direction: column; gap: 0.5rem; }
+.kpiIcon { width: 44px; height: 44px; border-radius: var(--radius-sm); display: flex; align-items: center; justify-content: center; font-size: 1.3rem; margin-bottom: 0.25rem; }
+.kpiValue { font-size: 2rem; font-weight: 800; color: var(--text); line-height: 1; }
+.kpiLabel { font-size: 0.82rem; color: var(--text-muted); font-weight: 500; }
+.chartTitle { font-size: 1rem; font-weight: 700; color: var(--text); margin-bottom: 1.25rem; }
+.pieWrapper { display: flex; align-items: center; gap: 1rem; }
+.pieLegend { display: flex; flex-direction: column; gap: 0.75rem; flex: 1; }
+.legendItem { display: flex; align-items: center; gap: 0.5rem; font-size: 0.85rem; }
+.legendDot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+.legendName { flex: 1; color: var(--text-muted); }
+.legendVal { font-weight: 700; color: var(--text); }
+.eventList { display: flex; flex-direction: column; gap: 0.75rem; }
+.eventItem { display: flex; align-items: center; gap: 1rem; padding: 0.875rem; background: var(--bg); border-radius: var(--radius); }
+.eventDate { text-align: center; min-width: 46px; }
+.eventDay { font-size: 1.4rem; font-weight: 800; color: var(--accent); line-height: 1; }
+.eventMonth { font-size: 0.72rem; color: var(--text-muted); text-transform: uppercase; }
+.eventInfo { flex: 1; min-width: 0; }
+.eventTitle { font-weight: 600; font-size: 0.9rem; color: var(--text); }
+.eventMeta { font-size: 0.8rem; color: var(--text-muted); margin-top: 0.15rem; }
+
+.simpleList { display: flex; flex-direction: column; gap: 0.75rem; }
+.simpleItem { display: flex; align-items: center; gap: 0.75rem; padding: 0.5rem; border-radius: var(--radius-sm); transition: var(--transition); }
+.simpleItem:hover { background: var(--bg); }
+
+.emptyBox { padding: 1.5rem; background: var(--bg); border-radius: var(--radius); color: var(--text-muted); font-size: 0.85rem; text-align: center; border: 1px dashed var(--border); }
+
+.skelTitle { height: 28px; width: 180px; border-radius: 8px; }
+.skelSub { height: 16px; width: 280px; border-radius: 6px; margin-top: 8px; }

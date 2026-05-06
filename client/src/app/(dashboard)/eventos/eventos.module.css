@@ -1,0 +1,13 @@
+.filters { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 1.5rem; }
+.eventCard { display: flex; flex-direction: column; gap: 0.875rem; }
+.eventHeader { display: flex; gap: 1rem; align-items: flex-start; }
+.eventDateBox { text-align: center; background: var(--bg); border-radius: var(--radius-sm); padding: 0.5rem 0.75rem; min-width: 52px; flex-shrink: 0; }
+.eventDay { font-size: 1.5rem; font-weight: 800; color: var(--accent); line-height: 1; }
+.eventMonth { font-size: 0.68rem; color: var(--text-muted); text-transform: uppercase; }
+.eventBody { flex: 1; display: flex; flex-direction: column; gap: 0.3rem; }
+.eventTitle { font-size: 0.95rem; font-weight: 700; color: var(--text); }
+.eventTime { font-size: 0.8rem; color: var(--text-muted); }
+.eventLocation { font-size: 0.82rem; color: var(--text-muted); }
+.eventDesc { font-size: 0.82rem; color: var(--text-muted); line-height: 1.5; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.eventFooter { display: flex; align-items: center; justify-content: space-between; border-top: 1px solid var(--border); padding-top: 0.75rem; }
+.attendees { font-size: 0.8rem; color: var(--text-muted); font-weight: 500; }

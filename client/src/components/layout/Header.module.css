@@ -1,0 +1,23 @@
+.header {
+  height: var(--header-height);
+  background: var(--bg-card);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 2rem;
+  position: sticky;
+  top: 0;
+  z-index: 50;
+}
+.title { font-size: 1.2rem; font-weight: 700; color: var(--text); }
+.right { display: flex; align-items: center; gap: 1rem; }
+.badge {
+  font-size: 0.78rem; font-weight: 600;
+  color: var(--accent-dark);
+  background: rgba(201,168,76,0.1);
+  padding: 0.3rem 0.75rem;
+  border-radius: 99px;
+  border: 1px solid rgba(201,168,76,0.2);
+  letter-spacing: 0.02em;
+}
