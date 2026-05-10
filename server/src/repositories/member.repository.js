@@ -18,7 +18,7 @@ export const countAll = (filter = {}, search) => {
   return Member.countDocuments(query);
 };
 
-export const findById = (id) => Member.findById(id).populate('cell', 'name meetingDay meetingTime');
+export const findById = (id) => Member.findOne({ _id: id, isActive: true }).populate('cell', 'name meetingDay meetingTime');
 
 export const create = (data) => Member.create(data);
 
@@ -29,32 +29,33 @@ export const remove = (id) => Member.findByIdAndUpdate(id, { isActive: false }, 
 export const pushActivity = (id, activity) =>
   Member.findByIdAndUpdate(id, { $push: { activityHistory: activity } }, { new: true });
 
-export const countByStatus = () =>
-  Member.aggregate([
-    { $match: { isActive: true } },
-    { $group: { _id: '$status', count: { $sum: 1 } } },
-  ]);
-
-export const countByMonth = () =>
-  Member.aggregate([
-    { $match: { isActive: true } },
-    { $group: { _id: { year: { $year: '$createdAt' }, month: { $month: '$createdAt' } }, count: { $sum: 1 } } },
-    { $sort: { '_id.year': 1, '_id.month': 1 } },
-    { $limit: 12 },
-  ]);
-
-export const findBirthdaysMonth = (limit = 5) => {
+export const getDashboardStats = (birthdayLimit = 5, recentLimit = 5) => {
   const currentMonth = new Date().getMonth() + 1;
-  return Member.find({
-    isActive: true,
-    birthDate: { $exists: true },
-    $expr: { $eq: [{ $month: '$birthDate' }, currentMonth] }
-  }).limit(limit).select('name birthDate photo');
-};
+  const twelveMonthsAgo = new Date();
+  twelveMonthsAgo.setMonth(twelveMonthsAgo.getMonth() - 11);
+  twelveMonthsAgo.setDate(1);
+  twelveMonthsAgo.setHours(0, 0, 0, 0);
 
-export const findRecent = (limit = 5) => {
-  return Member.find({ isActive: true })
-    .sort({ createdAt: -1 })
-    .limit(limit)
-    .select('name createdAt photo');
+  return Member.aggregate([
+    { $match: { isActive: true } },
+    { $facet: {
+      total: [{ $count: 'count' }],
+      byStatus: [{ $group: { _id: '$status', count: { $sum: 1 } } }],
+      byMonth: [
+        { $match: { createdAt: { $gte: twelveMonthsAgo } } },
+        { $group: { _id: { year: { $year: '$createdAt' }, month: { $month: '$createdAt' } }, count: { $sum: 1 } } },
+        { $sort: { '_id.year': 1, '_id.month': 1 } },
+      ],
+      birthdays: [
+        { $match: { birthDate: { $exists: true, $ne: null }, $expr: { $eq: [{ $month: '$birthDate' }, currentMonth] } } },
+        { $limit: birthdayLimit },
+        { $project: { name: 1, birthDate: 1, photo: 1 } },
+      ],
+      recent: [
+        { $sort: { createdAt: -1 } },
+        { $limit: recentLimit },
+        { $project: { name: 1, createdAt: 1, photo: 1 } },
+      ],
+    }},
+  ]);
 };

@@ -12,7 +12,7 @@ export const findAll = (filter = {}, options = {}) => {
 };
 
 export const findById = (id) =>
-  Event.findById(id)
+  Event.findOne({ _id: id, isActive: true })
     .populate('organizer', 'name avatar')
     .populate('attendees', 'name photo phone')
     .populate('checkIns.member', 'name photo');
@@ -37,10 +37,14 @@ export const addCheckIn = (id, memberId) =>
     { new: true }
   );
 
-export const countAll = () => Event.countDocuments({ isActive: true });
-
-export const countThisMonth = () => {
+export const getDashboardStats = () => {
   const start = new Date(); start.setDate(1); start.setHours(0, 0, 0, 0);
   const end = new Date(); end.setMonth(end.getMonth() + 1); end.setDate(0); end.setHours(23, 59, 59);
-  return Event.countDocuments({ isActive: true, date: { $gte: start, $lte: end } });
+  return Event.aggregate([
+    { $match: { isActive: true } },
+    { $facet: {
+      total: [{ $count: 'count' }],
+      thisMonth: [{ $match: { date: { $gte: start, $lte: end } } }, { $count: 'count' }],
+    }},
+  ]);
 };

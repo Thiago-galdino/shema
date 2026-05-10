@@ -14,12 +14,12 @@ const navItems = [
   { href: '/feed', icon: '💬', label: 'Feed' },
 ];
 
-export default function Sidebar() {
+export default function Sidebar({ isOpen, onClose }) {
   const pathname = usePathname();
   const { user, logout } = useAuth();
 
   return (
-    <aside className={styles.sidebar}>
+    <aside className={`${styles.sidebar} ${isOpen ? styles.open : ''}`}>
       <div className={styles.logo}>
         <div className={styles.logoIcon} style={{ borderRadius: '50%', overflow: 'hidden', background: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '2px' }}>
           <Image src="/logo.png" alt="Shema Logo" width={40} height={40} style={{ objectFit: 'contain' }} />

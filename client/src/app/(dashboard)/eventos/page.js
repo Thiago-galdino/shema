@@ -1,6 +1,7 @@
 'use client';
 import { useState, useEffect, useCallback } from 'react';
 import api from '@/lib/api';
+import toast from 'react-hot-toast';
 import { eventTypeLabels } from '@/lib/utils';
 import styles from './eventos.module.css';
 
@@ -38,7 +39,7 @@ export default function EventosPage() {
       if (editEvent) await api.put(`/events/${editEvent._id}`, form);
       else await api.post('/events', form);
       setShowModal(false); fetchEvents();
-    } catch (e) { alert(e.message); }
+    } catch (e) { toast.error(e.message); }
     finally { setSaving(false); }
   };
 
@@ -48,7 +49,7 @@ export default function EventosPage() {
       await api.delete(`/events/${id}`);
       await fetchEvents();
     } catch (e) {
-      alert(`Erro ao excluir: ${e.message}`);
+      toast.error(`Erro ao excluir: ${e.message}`);
     }
   };
 

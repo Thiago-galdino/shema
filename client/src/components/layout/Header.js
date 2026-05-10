@@ -10,14 +10,17 @@ const pageNames = {
   '/feed': 'Feed da Comunidade',
 };
 
-export default function Header() {
+export default function Header({ onMenuToggle }) {
   const pathname = usePathname();
   const base = '/' + pathname.split('/')[1];
   const title = pageNames[base] || 'Plataforma';
 
   return (
     <header className={styles.header}>
-      <div>
+      <div className={styles.left}>
+        <button className={styles.menuBtn} onClick={onMenuToggle} aria-label="Abrir menu">
+          <span /><span /><span />
+        </button>
         <h1 className={styles.title}>{title}</h1>
       </div>
       <div className={styles.right}>

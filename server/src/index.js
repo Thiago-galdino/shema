@@ -3,11 +3,14 @@ import 'express-async-errors';
 import express from 'express';
 import cors from 'cors';
 import morgan from 'morgan';
+import cookieParser from 'cookie-parser';
 import path from 'path';
 import { fileURLToPath } from 'url';
 
+import swaggerUi from 'swagger-ui-express';
 import connectDB from './config/db.js';
 import { errorHandler } from './middlewares/error.middleware.js';
+import { swaggerSpec } from './config/swagger.js';
 
 import authRoutes from './routes/auth.routes.js';
 import memberRoutes from './routes/member.routes.js';
@@ -23,10 +26,24 @@ const app = express();
 connectDB();
 
 // Middlewares globais
-app.use(cors({ origin: process.env.CLIENT_URL, credentials: true }));
+const allowedOrigins = (process.env.CLIENT_URL || '')
+  .split(',')
+  .map((o) => o.trim())
+  .filter(Boolean);
+
+app.use(cors({
+  origin: (origin, callback) => {
+    if (!origin || allowedOrigins.includes(origin)) return callback(null, true);
+    callback(new Error(`Origem não permitida pelo CORS: ${origin}`));
+  },
+  credentials: true,
+}));
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
-if (process.env.NODE_ENV !== 'test') app.use(morgan('dev'));
+app.use(cookieParser());
+if (process.env.NODE_ENV !== 'test') {
+  app.use(morgan(process.env.NODE_ENV === 'production' ? 'combined' : 'dev'));
+}
 
 // Servir arquivos de upload
 app.use('/uploads', express.static(path.join(__dirname, '..', '..', 'uploads')));
@@ -43,6 +60,11 @@ app.use('/api/dashboard', dashboardRoutes);
 app.get('/api/health', (req, res) => {
   res.json({ success: true, message: 'Shema API está rodando! 🚀', timestamp: new Date() });
 });
+
+// Swagger UI (apenas fora de produção)
+if (process.env.NODE_ENV !== 'production') {
+  app.use('/api/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+}
 
 // Handler global de erros (deve ser o último)
 app.use(errorHandler);

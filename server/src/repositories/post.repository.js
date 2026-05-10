@@ -12,7 +12,7 @@ export const findAll = (options = {}) => {
 };
 
 export const findById = (id) =>
-  Post.findById(id)
+  Post.findOne({ _id: id, isActive: true })
     .populate('author', 'name avatar role')
     .populate('comments.author', 'name avatar')
     .populate('likes', 'name');
@@ -24,7 +24,7 @@ export const update = (id, data) => Post.findByIdAndUpdate(id, data, { new: true
 export const remove = (id) => Post.findByIdAndUpdate(id, { isActive: false }, { new: true });
 
 export const toggleLike = async (id, userId) => {
-  const post = await Post.findById(id);
+  const post = await Post.findOne({ _id: id, isActive: true });
   const liked = post.likes.includes(userId);
   if (liked) {
     await Post.findByIdAndUpdate(id, { $pull: { likes: userId } });

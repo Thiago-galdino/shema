@@ -13,35 +13,35 @@ const apiFetch = async (endpoint, options = {}) => {
     ...options.headers,
   };
 
-  // Remove Content-Type for FormData
   if (options.body instanceof FormData) {
     delete headers['Content-Type'];
   }
 
-  const res = await fetch(`${API_URL}${endpoint}`, { ...options, headers });
+  const res = await fetch(`${API_URL}${endpoint}`, {
+    ...options,
+    headers,
+    credentials: 'include',
+  });
   const data = await res.json();
 
   if (!res.ok) {
     if (res.status === 401 && typeof window !== 'undefined') {
-      // Try refresh
-      const refreshToken = localStorage.getItem('shema_refresh');
-      if (refreshToken) {
-        const refreshRes = await fetch(`${API_URL}/auth/refresh`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ refreshToken }),
+      const refreshRes = await fetch(`${API_URL}/auth/refresh`, {
+        method: 'POST',
+        credentials: 'include',
+      });
+      if (refreshRes.ok) {
+        const { accessToken } = await refreshRes.json();
+        localStorage.setItem('shema_token', accessToken);
+        const retryHeaders = { ...headers, Authorization: `Bearer ${accessToken}` };
+        const retryRes = await fetch(`${API_URL}${endpoint}`, {
+          ...options,
+          headers: retryHeaders,
+          credentials: 'include',
         });
-        if (refreshRes.ok) {
-          const { accessToken } = await refreshRes.json();
-          localStorage.setItem('shema_token', accessToken);
-          // Retry original request
-          const retryHeaders = { ...headers, Authorization: `Bearer ${accessToken}` };
-          const retryRes = await fetch(`${API_URL}${endpoint}`, { ...options, headers: retryHeaders });
-          return retryRes.json();
-        }
+        return retryRes.json();
       }
       localStorage.removeItem('shema_token');
-      localStorage.removeItem('shema_refresh');
       window.location.href = '/login';
     }
     throw new Error(data.message || 'Erro na requisição.');

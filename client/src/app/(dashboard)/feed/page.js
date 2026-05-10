@@ -2,6 +2,7 @@
 import Image from 'next/image';
 import { useState, useEffect, useCallback } from 'react';
 import api from '@/lib/api';
+import toast from 'react-hot-toast';
 import { useAuth } from '@/context/AuthContext';
 import { getInitials, timeAgo, getAvatarUrl } from '@/lib/utils';
 import styles from './feed.module.css';
@@ -106,7 +107,7 @@ export default function FeedPage() {
       setContent(''); setMedia(null); setMediaPreview(null);
       await fetchPosts();
     }
-    catch (e) { alert(e.message); }
+    catch (e) { toast.error(e.message); }
     finally { setPosting(false); }
   };
 

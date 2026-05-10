@@ -2,41 +2,38 @@ import * as memberRepo from '../repositories/member.repository.js';
 import * as cellRepo from '../repositories/cell.repository.js';
 import * as eventRepo from '../repositories/event.repository.js';
 
+const MONTHS = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'];
+
 export const getKPIs = async () => {
-  const [totalMembers, totalCells, totalEvents, eventsThisMonth, byStatus, byMonth, birthdays, recentMembers] = await Promise.all([
-    memberRepo.countAll(),
+  const [memberStats, eventStats, totalCells] = await Promise.all([
+    memberRepo.getDashboardStats(5, 5),
+    eventRepo.getDashboardStats(),
     cellRepo.countAll(),
-    eventRepo.countAll(),
-    eventRepo.countThisMonth(),
-    memberRepo.countByStatus(),
-    memberRepo.countByMonth(),
-    memberRepo.findBirthdaysMonth(5),
-    memberRepo.findRecent(5),
   ]);
+
+  const { total, byStatus, byMonth, birthdays, recent } = memberStats[0];
+  const { total: evTotal, thisMonth } = eventStats[0];
 
   const statusMap = {};
   byStatus.forEach(({ _id, count }) => { statusMap[_id] = count; });
 
-  const months = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'];
-  const growthData = byMonth.map(({ _id, count }) => ({
-    month: months[_id.month - 1],
-    members: count,
-  }));
-
   return {
-    totalMembers,
+    totalMembers: total[0]?.count || 0,
     totalCells,
-    totalEvents,
-    eventsThisMonth,
+    totalEvents: evTotal[0]?.count || 0,
+    eventsThisMonth: thisMonth[0]?.count || 0,
     birthdays,
-    recentMembers,
+    recentMembers: recent,
     byStatus: {
       visitante: statusMap.visitante || 0,
       membro: statusMap.membro || 0,
       lider: statusMap.lider || 0,
       discipulado: statusMap.discipulado || 0,
     },
-    growthData,
+    growthData: byMonth.map(({ _id, count }) => ({
+      month: MONTHS[_id.month - 1],
+      members: count,
+    })),
   };
 };
 

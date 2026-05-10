@@ -21,7 +21,6 @@ export function AuthProvider({ children }) {
         setUser(data.user);
       } catch (error) {
         localStorage.removeItem('shema_token');
-        localStorage.removeItem('shema_refresh');
       } finally {
         setLoading(false);
       }
@@ -33,7 +32,6 @@ export function AuthProvider({ children }) {
   const login = async (email, password) => {
     const data = await api.post('/auth/login', { email, password });
     localStorage.setItem('shema_token', data.accessToken);
-    localStorage.setItem('shema_refresh', data.refreshToken);
     setUser(data.user);
     return data.user;
   };
@@ -41,7 +39,6 @@ export function AuthProvider({ children }) {
   const logout = async () => {
     try { await api.post('/auth/logout', {}); } catch (_) {}
     localStorage.removeItem('shema_token');
-    localStorage.removeItem('shema_refresh');
     setUser(null);
   };
 

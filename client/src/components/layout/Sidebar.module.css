@@ -8,6 +8,7 @@
   flex-direction: column;
   z-index: 100;
   border-right: 1px solid rgba(255,255,255,0.05);
+  transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .logo {
@@ -77,3 +78,12 @@
   line-height: 1;
 }
 .logoutBtn:hover { color: var(--danger); background: rgba(239,68,68,0.1); }
+
+@media (max-width: 768px) {
+  .sidebar {
+    transform: translateX(-100%);
+  }
+  .sidebar.open {
+    transform: translateX(0);
+  }
+}

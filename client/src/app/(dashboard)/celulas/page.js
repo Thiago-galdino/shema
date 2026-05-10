@@ -1,6 +1,7 @@
 'use client';
 import { useState, useEffect, useCallback } from 'react';
 import api from '@/lib/api';
+import toast from 'react-hot-toast';
 import { getInitials, meetingDayLabels } from '@/lib/utils';
 import styles from './celulas.module.css';
 
@@ -33,7 +34,7 @@ export default function CelulasPage() {
       if (editCell) await api.put(`/cells/${editCell._id}`, form);
       else await api.post('/cells', form);
       setShowModal(false); fetchCells();
-    } catch (e) { alert(e.message); }
+    } catch (e) { toast.error(e.message); }
     finally { setSaving(false); }
   };
 
@@ -43,7 +44,7 @@ export default function CelulasPage() {
       await api.delete(`/cells/${id}`);
       await fetchCells();
     } catch (e) {
-      alert(`Erro ao excluir: ${e.message}`);
+      toast.error(`Erro ao excluir: ${e.message}`);
     }
   };
 

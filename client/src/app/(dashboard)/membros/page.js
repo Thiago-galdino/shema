@@ -4,6 +4,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import api from '@/lib/api';
+import toast from 'react-hot-toast';
 import { statusColors, getInitials, formatDate, getAvatarUrl } from '@/lib/utils';
 import styles from './membros.module.css';
 
@@ -59,7 +60,7 @@ export default function MembrosPage() {
       if (editMember) await api.put(`/members/${editMember._id}`, formData);
       else await api.post('/members', formData);
       setShowModal(false); fetchMembers();
-    } catch (e) { alert(e.message); }
+    } catch (e) { toast.error(e.message); }
     finally { setSaving(false); }
   };
 
@@ -69,7 +70,7 @@ export default function MembrosPage() {
       await api.delete(`/members/${id}`);
       await fetchMembers();
     } catch (e) {
-      alert(`Erro ao excluir: ${e.message}`);
+      toast.error(`Erro ao excluir: ${e.message}`);
     }
   };
 

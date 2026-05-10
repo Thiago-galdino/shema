@@ -8,7 +8,7 @@ export const findAll = (filter = {}) =>
     .lean();
 
 export const findById = (id) =>
-  Cell.findById(id)
+  Cell.findOne({ _id: id, isActive: true })
     .populate('leader', 'name photo phone')
     .populate('members', 'name photo status phone');
 

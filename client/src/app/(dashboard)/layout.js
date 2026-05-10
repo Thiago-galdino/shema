@@ -1,18 +1,25 @@
 'use client';
-import { useEffect } from 'react';
-import { useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
+import { useRouter, usePathname } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
 import Sidebar from '@/components/layout/Sidebar';
 import Header from '@/components/layout/Header';
+import { Toaster } from 'react-hot-toast';
 import styles from './layout.module.css';
 
 export default function DashboardLayout({ children }) {
   const { isAuthenticated, loading } = useAuth();
   const router = useRouter();
+  const pathname = usePathname();
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   useEffect(() => {
     if (!loading && !isAuthenticated) router.push('/login');
   }, [isAuthenticated, loading, router]);
+
+  useEffect(() => {
+    setSidebarOpen(false);
+  }, [pathname]);
 
   if (loading) {
     return (
@@ -29,9 +36,11 @@ export default function DashboardLayout({ children }) {
 
   return (
     <div className={styles.layout}>
-      <Sidebar />
+      <Toaster position="top-right" toastOptions={{ duration: 4000 }} />
+      {sidebarOpen && <div className={styles.overlay} onClick={() => setSidebarOpen(false)} />}
+      <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
       <div className={styles.content}>
-        <Header />
+        <Header onMenuToggle={() => setSidebarOpen(p => !p)} />
         <main className={styles.main}>{children}</main>
       </div>
     </div>
