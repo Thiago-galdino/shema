@@ -36,8 +36,8 @@ export default function LoginPage() {
 
       <div className={styles.container}>
         <div className={styles.logoArea}>
-          <div className={styles.logoIcon} style={{ borderRadius: '50%', overflow: 'hidden', background: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '2px', width: '76px', height: '76px', margin: '0 auto 0.5rem' }}>
-            <Image src="/logo.png" alt="Shema Logo" width={72} height={72} style={{ objectFit: 'cover' }} />
+          <div className={styles.logoIcon} style={{ borderRadius: '50%', overflow: 'hidden', background: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '2px', width: '60px', height: '60px', margin: '0 auto 0.35rem' }}>
+            <Image src="/logo.png" alt="Shema Logo" width={56} height={56} style={{ objectFit: 'cover' }} />
           </div>
           <h1 className={styles.logoText}>Igreja Batista Shema</h1>
           <p className={styles.logoSub}>Fortaleza – CE</p>
